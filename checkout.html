@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Yuddhakand Ticket Booking</title>
+
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background: #f7f7f7;
+        margin: 0;
+        padding: 40px 20px;
+      }
+
+      .container {
+        max-width: 600px;
+        margin: auto;
+        background: white;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 10px;
+      }
+
+      .subtitle {
+        text-align: center;
+        color: #666;
+        margin-bottom: 25px;
+      }
+
+      label {
+        display: block;
+        margin-top: 15px;
+        margin-bottom: 5px;
+        font-weight: bold;
+      }
+
+      input,
+      select {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        box-sizing: border-box;
+      }
+
+      .price-box {
+        margin-top: 25px;
+        background: #f3f3f3;
+        padding: 15px;
+        border-radius: 10px;
+        text-align: center;
+      }
+
+      .amount {
+        font-size: 28px;
+        font-weight: bold;
+        color: #8b0000;
+      }
+
+      button {
+        width: 100%;
+        margin-top: 25px;
+        padding: 15px;
+        border: none;
+        border-radius: 10px;
+        background: #8b0000;
+        color: white;
+        font-size: 18px;
+        cursor: pointer;
+      }
+
+      button:hover {
+        opacity: 0.9;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Yuddhakand Ticket Booking</h1>
+
+      <p class="subtitle">Secure your seat for the show. Seating on first come first serve basis.</p>
+
+      <form action="create-payment.php" method="POST">
+        <label>Full Name</label>
+        <input type="text" name="name" required />
+
+        <label>Email Address</label>
+        <input
+          type="email"
+          name="email"
+          required
+          placeholder="example@email.com"
+        />
+
+        <label>WhatsApp Number</label>
+        <input
+          type="tel"
+          name="phone"
+          id="phone"
+          required
+          pattern="[0-9]{10}"
+          maxlength="10"
+          placeholder="10 digit WhatsApp number"
+          oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+        />
+
+        <label>Reference (Optional)</label>
+        <input
+          type="text"
+          name="reference"
+          placeholder="Friend, Instagram, WhatsApp Group, etc."
+        />
+
+        <label>Number of Tickets</label>
+        <input
+          type="number"
+          id="quantity"
+          name="quantity"
+          min="1"
+          max="20"
+          value="1"
+          required
+          oninput="updatePrice()"
+        />
+
+        <div
+          style="
+            margin-top: 15px;
+            padding: 12px;
+            background: #fff3cd;
+            border: 1px solid #ffe69c;
+            border-radius: 8px;
+            color: #856404;
+            font-size: 14px;
+          "
+        >
+          ⚠ Early Bird Offer Active. Ticket prices will increase after 15th of
+          July. Book now to secure the current ₹300 rate.
+        </div>
+
+        <div class="price-box">
+          <p>Total Amount</p>
+          <div class="amount">₹<span id="total">300</span></div>
+        </div>
+
+        <input type="hidden" name="amount" id="amount" value="300" />
+
+        <button type="submit">Proceed to Payment</button>
+      </form>
+    </div>
+
+    <script>
+      const TICKET_PRICE = 300;
+
+      function updatePrice() {
+        let qty = parseInt(document.getElementById("quantity").value);
+        if (isNaN(qty) || qty < 1) {
+          qty = 1;
+        }
+        if (qty > 20) {
+          qty = 20;
+          alert("Maximum 20 tickets can be booked in one transaction.");
+        }
+        document.getElementById("quantity").value = qty;
+        const total = qty * TICKET_PRICE;
+        document.getElementById("total").innerText = total;
+        document.getElementById("amount").value = total;
+      }
+    </script>
+  </body>
+</html>
