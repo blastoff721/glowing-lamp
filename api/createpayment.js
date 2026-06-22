@@ -2,83 +2,45 @@ import {
   StandardCheckoutClient,
   Env,
   MetaInfo,
+  StandardCheckoutPayRequest,
   PrefillUserLoginDetails,
   CreateSdkOrderRequest
-} from "@phonepe-pg/pg-sdk-node";
+} from '@phonepe-pg/pg-sdk-node';
+import { randomUUID } from 'crypto';
 
-import { randomUUID } from "crypto";
+const clientId = process.env.PHONEPE_CLIENT_ID;
+const clientSecret = process.env.PHONEPE_CLIENT_SECRET;
+const clientVersion = Number(process.env.PHONEPE_CLIENT_VERSION);
+const env = Env.PRODUCTION
 
-export default async function handler(req, res) {
+const client = StandardCheckoutClient.getInstance(clientId, clientSecret, clientVersion, env);
 
-  if (req.method !== "POST") {
-    return res.status(405).json({
-      success: false,
-      error: "Method not allowed"
-    });
-  }
+const merchantOrderId = randomUUID();
+const amount = 100; // Amount in paise (100 = ₹1.00)
 
-  try {
+const prefillUserLoginDetails = PrefillUserLoginDetails.builder()
+    .phoneNumber(process.env.PHONEPE_TEST_NUMBER ?? "")
+    .build(); // ← added .build()
 
-    const {
-      name,
-      email,
-      phone,
-      quantity,
-      reference
-    } = req.body;
+const metaInfo = MetaInfo.builder()
+    .udf1("udf1")
+    .udf2("udf2")
+    .udf3("udf3")
+    .build();
 
-    // ₹300 per ticket
-    const amount = Number(quantity) * 300 * 100; // paise
+const orderRequest = CreateSdkOrderRequest.StandardCheckoutBuilder()
+    .merchantOrderId(merchantOrderId)
+    .amount(amount)
+    .prefillUserLoginDetails(prefillUserLoginDetails)
+    .metaInfo(metaInfo)
+    .redirectUrl("https://glowing-lamp-phi.vercel.app/success.html")
+    .expireAfter(3600)
+    .message("Message that will be shown for UPI collect transaction")
+    .build();
 
-    const client = StandardCheckoutClient.getInstance(
-      process.env.PHONEPE_CLIENT_ID,
-      process.env.PHONEPE_CLIENT_SECRET,
-      Number(process.env.PHONEPE_CLIENT_VERSION),
-      Env.PRODUCTION
-    );
-
-    const merchantOrderId = randomUUID();
-
-    const prefillUserLoginDetails =
-      PrefillUserLoginDetails
-        .builder()
-        .phoneNumber(phone);
-
-    const metaInfo = MetaInfo
-      .builder()
-      .udf1(name || "")
-      .udf2(email || "")
-      .udf3(reference || "")
-      .build();
-
-    const orderRequest =
-      CreateSdkOrderRequest
-        .StandardCheckoutBuilder()
-        .merchantOrderId(merchantOrderId)
-        .amount(amount)
-        .prefillUserLoginDetails(prefillUserLoginDetails)
-        .metaInfo(metaInfo)
-        .redirectUrl("https://itihaasa.in/success.html")
-        .expireAfter(3600)
-        .message(`Yuddhakand Tickets x ${quantity}`)
-        .build();
-
-    const response = await client.pay(orderRequest);
-
-    return res.status(200).json({
-      success: true,
-      merchantOrderId,
-      redirectUrl: response.redirectUrl
-    });
-
-  } catch (err) {
-
-    console.error(err);
-
-    return res.status(500).json({
-      success: false,
-      error: err.message
-    });
-
-  }
-}
+client.pay(orderRequest).then((response) => {
+    const checkoutPageUrl = response.redirectUrl;
+    console.log("Redirect to:", checkoutPageUrl);
+}).catch((err) => {
+    console.error("PhonePe payment error:", err);
+});
