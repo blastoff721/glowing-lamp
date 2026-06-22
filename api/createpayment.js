@@ -22,7 +22,7 @@ export default async function handler(req, res) {
       process.env.PHONEPE_CLIENT_ID,
       process.env.PHONEPE_CLIENT_SECRET,
       Number(process.env.PHONEPE_CLIENT_VERSION),
-      Env.PRODUCTION
+      process.env.ENV
     );
 
     const merchantOrderId = randomUUID();
