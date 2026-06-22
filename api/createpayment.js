@@ -36,7 +36,7 @@ export default async function handler(req, res) {
         .merchantOrderId(merchantOrderId)
         .amount(Number(amount) * 100)
         .prefillUserLoginDetails(prefillUserLoginDetails)
-        .redirectUrl("https://itihaasa.in/payment-success.html")
+        .redirectUrl("https://itihaasa.in/success.html")
         .expireAfter(3600)
         .build();
 
