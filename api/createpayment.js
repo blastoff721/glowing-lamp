@@ -28,11 +28,7 @@ export default async function handler(req, res) {
 
     const response = await client.createSdkOrder(request);
 
-    return res.status(200).json({
-      success: true,
-      token: response.token,
-      merchantOrderId
-    });
+    return res.status(200).json(response);
 
   } catch (err) {
 
