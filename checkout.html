@@ -156,33 +156,115 @@
     </div>
 
     <script>
-      const TICKET_PRICE = 300;
-      
-      const scriptURL = 'https://script.google.com/macros/s/AKfycbz0Kmmp8cmoQDcGsgCsVMo6uaojUPZKapRV6iYwRFrvcnCgn98R3DU8JltagPotuOSTMw/exec'
-      const form = document.getElementById('ticketForm')
-      
-      form.addEventListener('submit', e => {
-        e.preventDefault()
-        fetch(scriptURL, { method: 'POST', body: new FormData(form)})
-          .then(response => alert("Thank you! your form is submitted successfully." ))
-          .then(() => {  window.location.reload(); })
-          .catch(error => console.error('Error!', error.message))
-      })
+  const TICKET_PRICE = 300;
 
-      function updatePrice() {
-        let qty = parseInt(document.getElementById("quantity").value);
-        if (isNaN(qty) || qty < 1) {
-          qty = 1;
-        }
-        if (qty > 20) {
-          qty = 20;
-          alert("Maximum 20 tickets can be booked in one transaction.");
-        }
-        document.getElementById("quantity").value = qty;
-        const total = qty * TICKET_PRICE;
-        document.getElementById("total").innerText = total;
-        document.getElementById("amount").value = total;
+  const sheetURL =
+    'https://script.google.com/macros/s/AKfycbz0Kmmp8cmoQDcGsgCsVMo6uaojUPZKapRV6iYwRFrvcnCgn98R3DU8JltagPotuOSTMw/exec';
+
+  const form = document.getElementById('ticketForm');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const submitButton = form.querySelector('button');
+    submitButton.disabled = true;
+    submitButton.innerText = 'Creating Payment...';
+
+    try {
+      // Save booking details to Google Sheets
+      await fetch(sheetURL, {
+        method: 'POST',
+        body: new FormData(form)
+      });
+
+      // Create PhonePe order
+      const paymentResponse = await fetch('/api/createpayment', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          name: form.name.value,
+          email: form.email.value,
+          phone: form.phone.value,
+          reference: form.reference.value,
+          quantity: Number(form.quantity.value),
+          amount: Number(form.amount.value)
+        })
+      });
+
+      const paymentData = await paymentResponse.json();
+
+      console.log(paymentData);
+
+      if (!paymentResponse.ok) {
+        throw new Error(
+          paymentData.error || 'Failed to create payment'
+        );
       }
-    </script>
+
+      /*
+       * Depending on your PhonePe integration,
+       * this may be:
+       *
+       * paymentData.redirectUrl
+       * paymentData.checkoutUrl
+       * paymentData.paymentUrl
+       * or SDK invocation using paymentData.token
+       *
+       * For now we log the response.
+       */
+
+      alert('Payment order created successfully.');
+
+      console.log(
+        'Order ID:',
+        paymentData.orderId
+      );
+
+      console.log(
+        'Token:',
+        paymentData.token
+      );
+
+      // Example future redirect:
+      // window.location.href = paymentData.redirectUrl;
+
+    } catch (error) {
+      console.error(error);
+
+      alert(
+        'Unable to initiate payment. Please try again.'
+      );
+    }
+
+    submitButton.disabled = false;
+    submitButton.innerText = 'Proceed to Payment';
+  });
+
+  function updatePrice() {
+    let qty = parseInt(
+      document.getElementById('quantity').value
+    );
+
+    if (isNaN(qty) || qty < 1) {
+      qty = 1;
+    }
+
+    if (qty > 20) {
+      qty = 20;
+      alert(
+        'Maximum 20 tickets can be booked in one transaction.'
+      );
+    }
+
+    document.getElementById('quantity').value = qty;
+
+    const total = qty * TICKET_PRICE;
+
+    document.getElementById('total').innerText = total;
+    document.getElementById('amount').value = total;
+  }
+</script>
   </body>
 </html>
