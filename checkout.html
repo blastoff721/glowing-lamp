@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Yuddhakand Ticket Booking</title>
+    <script src="https://mercury.phonepe.com/web/bundle/checkout.js"></script>
 
     <style>
       body {
@@ -203,32 +204,12 @@
         );
       }
 
-      /*
-       * Depending on your PhonePe integration,
-       * this may be:
-       *
-       * paymentData.redirectUrl
-       * paymentData.checkoutUrl
-       * paymentData.paymentUrl
-       * or SDK invocation using paymentData.token
-       *
-       * For now we log the response.
-       */
-
-      alert('Payment order created successfully.');
-
-      console.log(
-        'Order ID:',
-        paymentData.orderId
-      );
-
-      console.log(
-        'Token:',
-        paymentData.token
-      );
-
-      // Example future redirect:
-      // window.location.href = paymentData.redirectUrl;
+PhonePeCheckout.transact({
+    token: paymentData.token,
+    callback: function(response) {
+        console.log("PhonePe Response:", response);
+    }
+});
 
     } catch (error) {
       console.error(error);
