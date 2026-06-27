@@ -2,20 +2,19 @@ import axios from "axios";
 
 export default async function handler(req, res) {
   try {
-    const clientId = process.env.PHONEPE_CLIENT_ID;
-    const clientSecret = process.env.PHONEPE_CLIENT_SECRET;
-    const clientVersion = process.env.PHONEPE_CLIENT_VERSION;
+    const merchantOrderId = `YTK_${Date.now()}`;
 
-    return res.status(200).json({
-      clientIdExists: !!clientId,
-      clientSecretExists: !!clientSecret,
-      clientVersionExists: !!clientVersion,
-      env: process.env.PHONEPE_ENV
+    res.status(200).json({
+      success: true,
+      merchantOrderId
     });
 
-  } catch (err) {
-    return res.status(500).json({
-      error: err.message
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      success: false,
+      error: error.message
     });
   }
 }
