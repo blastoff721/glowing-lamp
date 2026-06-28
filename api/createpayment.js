@@ -46,11 +46,13 @@ export default async function handler(req, res) {
 
         merchantUrls: {
           redirectUrl:
-            "https://glowing-lamp-phi.vercel.app/payment-status"
-        }
-      },
+            "https://www.itihaasa.in/payment-status"
+        },
 
-      disablePaymentRetry: false,
+        disablePaymentRetry: false,
+      }
+
+
 
       metaInfo: {
         udf1: name,
