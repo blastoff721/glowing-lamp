@@ -54,7 +54,35 @@
       <p>Thank you for booking your seat for <strong>Yuddhakand</strong>.</p>
 
       <p>Your payment has been received successfully.</p>
+      <div id="paymentDetails" style="
+  background:#f8f8f8;
+  padding:15px;
+  border-radius:10px;
+  margin:20px 0;
+  text-align:left;
+">
 
+  <p>
+    <strong>Transaction ID:</strong>
+    <span id="txnId">Loading...</span>
+  </p>
+
+  <p>
+    <strong>Amount Paid:</strong>
+    ₹<span id="amount">Loading...</span>
+  </p>
+
+  <p>
+    <strong>Tickets Confirmed:</strong>
+    <span id="tickets">Loading...</span>
+  </p>
+
+  <p>
+    <strong>Seat Allocation:</strong>
+    First come, first serve basis.
+  </p>
+
+</div>
       <p>
         Our team will share event updates and confirmation details on your
         registered WhatsApp number and email.
@@ -68,23 +96,48 @@
         <strong>+91 7498421623</strong>
       </p>
       <script>
-  const params = new URLSearchParams(window.location.search);
+        
+.then(data => {
 
-  const orderId = params.get("orderId");
+  console.log("PhonePe Status Response:", data);
 
-  console.log("Order ID:", orderId);
+  if (data.state === "COMPLETED") {
 
-  if (orderId) {
-    fetch(`/api/orderstatus?orderId=${orderId}`)
-      .then(response => response.json())
-      .then(data => {
-        console.log("PhonePe Status Response:", data);
-      })
-      .catch(error => {
-        console.error(error);
-      });
+    document.getElementById("txnId").innerText =
+      data.paymentDetails[0].transactionId;
+
+    document.getElementById("amount").innerText =
+      data.amount / 100;
+
+    document.getElementById("tickets").innerText =
+      data.metaInfo.udf4;
+
+  } else {
+
+    document.querySelector("h1").innerText =
+      "Payment Failed";
+
+    document.querySelector(".icon").innerText =
+      "❌";
+
+    document.getElementById("txnId").innerText =
+      "-";
+
+    document.getElementById("amount").innerText =
+      "-";
+
+    document.getElementById("tickets").innerText =
+      "0";
+
+    document.querySelectorAll("p")[0].innerHTML =
+      "Your payment could not be verified.";
+
+    document.querySelectorAll("p")[1].innerHTML =
+      "No seats have been reserved.";
   }
-</script>
+
+})
+      </script>
       <a class="button" href="/"> Return to Home </a>
     </div>
   </body>
