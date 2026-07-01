@@ -96,48 +96,49 @@
         <strong>+91 7498421623</strong>
       </p>
       <script>
-        
-.then(data => {
+const params = new URLSearchParams(window.location.search);
 
-  console.log("PhonePe Status Response:", data);
+const orderId = params.get("orderId");
 
-  if (data.state === "COMPLETED") {
+console.log("Order ID:", orderId);
 
-    document.getElementById("txnId").innerText =
-      data.paymentDetails[0].transactionId;
+if (orderId) {
+  fetch(`/api/orderstatus?orderId=${orderId}`)
+    .then(response => response.json())
+    .then(data => {
 
-    document.getElementById("amount").innerText =
-      data.amount / 100;
+      console.log("PhonePe Status Response:", data);
 
-    document.getElementById("tickets").innerText =
-      data.metaInfo.udf4;
+      if (data.state === "COMPLETED") {
 
-  } else {
+        document.getElementById("txnId").innerText =
+          data.paymentDetails[0].transactionId;
 
-    document.querySelector("h1").innerText =
-      "Payment Failed";
+        document.getElementById("amount").innerText =
+          data.amount / 100;
 
-    document.querySelector(".icon").innerText =
-      "❌";
+        document.getElementById("tickets").innerText =
+          data.metaInfo.udf4;
 
-    document.getElementById("txnId").innerText =
-      "-";
+      } else {
 
-    document.getElementById("amount").innerText =
-      "-";
+        document.querySelector("h1").innerText =
+          "Payment Failed";
 
-    document.getElementById("tickets").innerText =
-      "0";
+        document.querySelector(".icon").innerText =
+          "❌";
 
-    document.querySelectorAll("p")[0].innerHTML =
-      "Your payment could not be verified.";
+        document.getElementById("txnId").innerText = "-";
+        document.getElementById("amount").innerText = "-";
+        document.getElementById("tickets").innerText = "0";
+      }
 
-    document.querySelectorAll("p")[1].innerHTML =
-      "No seats have been reserved.";
-  }
-
-})
-      </script>
+    })
+    .catch(error => {
+      console.error(error);
+    });
+}
+</script>
       <a class="button" href="/"> Return to Home </a>
     </div>
   </body>
