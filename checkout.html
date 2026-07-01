@@ -204,12 +204,7 @@
         );
       }
 
-PhonePeCheckout.transact({
-    token: paymentData.token,
-    callback: function(response) {
-        console.log("PhonePe Response:", response);
-    }
-});
+window.location.href = paymentData.redirectUrl;
 
     } catch (error) {
       console.error(error);
