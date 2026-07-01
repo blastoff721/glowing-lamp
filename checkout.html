@@ -165,7 +165,13 @@
   const form = document.getElementById('ticketForm');
 
   form.addEventListener('submit', async (e) => {
+    console.log("Form found:", form);
+
+    form.addEventListener('submit', async (e) => {
+    console.log("Submit intercepted");
     e.preventDefault();
+
+  console.log("preventDefault executed");
 
     const submitButton = form.querySelector('button');
     submitButton.disabled = true;
