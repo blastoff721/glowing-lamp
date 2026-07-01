@@ -46,7 +46,7 @@ export default async function handler(req, res) {
 
         merchantUrls: {
           redirectUrl:
-            "https://www.itihaasa.in/payment-status"
+            "https://www.itihaasa.in/success.html"
         },
 
         disablePaymentRetry: false,
