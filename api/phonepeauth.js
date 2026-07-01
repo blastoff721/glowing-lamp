@@ -16,7 +16,7 @@ export default async function handler(req, res) {
     params.append("grant_type", "client_credentials");
 
     const response = await axios.post(
-      "https://api-preprod.phonepe.com/apis/pg-sandbox/v1/oauth/token",
+      "https://api.phonepe.com/apis/identity-manager/v1/oauth/token",
       params,
       {
         headers: {
