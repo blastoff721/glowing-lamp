@@ -120,6 +120,22 @@ if (orderId) {
         document.getElementById("tickets").innerText =
           data.metaInfo.udf4;
 
+        fetch(sheetURL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            type: "VERIFIED",
+            name: data.metaInfo.udf1,
+            transactionId: data.paymentDetails[0].transactionId,
+            amount: data.amount / 100,
+            seats: data.metaInfo.udf4,
+            status: data.state,
+            orderId: data.merchantOrderId
+        })
+    });
+
       } else {
 
         document.querySelector("h1").innerText =
