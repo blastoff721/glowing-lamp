@@ -11,41 +11,10 @@
       @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
       @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap');
 
-      .bebas-neue {
-        font-family: "Bebas Neue", sans-serif;
-      }
+      .bebas-neue { font-family: "Bebas Neue", sans-serif; }
+      .ibm-plex-mono { font-family: "IBM Plex Mono", monospace; }
 
-      .ibm-plex-mono {
-        font-family: "IBM Plex Mono", monospace;
-      }
-
-      .container {
-        max-width: 600px;
-        margin: auto;
-        padding: 30px;
-        border-radius: 5px;
-      }
-
-      h1 {
-        text-align: center;
-        margin-bottom: 10px;
-      }
-
-      .subtitle {
-        text-align: center;
-        color: #666;
-        margin-bottom: 25px;
-      }
-
-      label {
-        display: block;
-        margin-top: 15px;
-        margin-bottom: 5px;
-        font-weight: bold;
-      }
-
-      input,
-      select {
+      input, select {
         width: 100%;
         padding: 12px;
         border: 1px solid #ccc;
@@ -53,16 +22,11 @@
         box-sizing: border-box;
       }
 
-      .price-box {
-        margin-top: 25px;
-        padding: 15px;
-        border-radius: 10px;
-        text-align: center;
-      }
-
-      .amount {
-        font-size: 28px;
-        color: #1d1d1d;
+      label {
+        display: block;
+        margin-top: 15px;
+        margin-bottom: 5px;
+        font-weight: bold;
       }
 
       button {
@@ -77,255 +41,138 @@
         cursor: pointer;
       }
 
-      button:hover {
-        opacity: 0.9;
-      }
+      button:hover { opacity: 0.9; }
     </style>
   </head>
-  <body class="bg-[url('./Yuddhakand_Banner.jpeg')] bg-no-repeat bg-center bg-cover md:bg-auto lg:bg-cover xl:bg-none xl:bg-white p-4 xl:p-0">
-    <div class="hidden xl:grid grid-cols-2 auto-rows-fr">
-    <div class="container bg-white/10 backdrop-blur-md">
-      <h1 class="text-3xl font-semibold bebas-neue">Yuddhakand Ticket Booking</h1>
 
-      <p class="font-light text-gray-500 text-center ibm-plex-mono">Secure your seat for the show. Seating on first come first serve basis.</p>
+  <body class="min-h-screen bg-[url('./Yuddhakand_Banner.jpeg')] bg-no-repeat bg-center bg-cover xl:bg-none xl:bg-white">
 
-      <form id="ticketForm">
-        <label>Full Name</label>
-        <input type="text" name="name" required class="mb-2 bg-gray-100" />
+    <!-- SINGLE layout: stacked on mobile, side-by-side on xl -->
+    <div class="flex flex-col xl:grid xl:grid-cols-2 xl:min-h-screen">
 
-        <label>Email Address</label>
-        <input
-          type="email"
-          name="email"
-          required
-          placeholder="example@email.com"
-          class="mb-2 bg-gray-100"
-        />
+      <!-- FORM (left on desktop, top on mobile) -->
+      <div class="p-6 xl:p-10 bg-white/60 xl:bg-white backdrop-blur-md max-w-xl mx-auto xl:max-w-none xl:mx-0 w-full">
+        <h1 class="text-3xl font-semibold bebas-neue text-center mb-2">Yuddhakand Ticket Booking</h1>
+        <p class="font-light text-gray-600 text-center ibm-plex-mono mb-6">Secure your seat for the show. Seating on first come first serve basis.</p>
 
-        <label>WhatsApp Number</label>
-        <input
-          type="tel"
-          name="phone"
-          id="phone"
-          required
-          pattern="[0-9]{10}"
-          maxlength="10"
-          placeholder="10 digit WhatsApp number"
-          oninput="this.value = this.value.replace(/[^0-9]/g, '')"
-          class="mb-2 bg-gray-100"
-        />
+        <form id="ticketForm">
+          <label>Full Name</label>
+          <input type="text" name="name" required class="mb-2 bg-gray-100" />
 
-        <label>Reference (Optional)</label>
-        <input
-          type="text"
-          name="reference"
-          placeholder="Friend, Instagram, WhatsApp Group, etc."
-          class="mb-2 bg-gray-100"
-        />
+          <label>Email Address</label>
+          <input type="email" name="email" required placeholder="example@email.com" class="mb-2 bg-gray-100" />
 
-        <label>Number of Tickets</label>
-        <input
-          type="number"
-          id="quantity"
-          name="quantity"
-          min="1"
-          max="20"
-          value="1"
-          required
-          oninput="updatePrice()"
-          class="mb-2 bg-gray-100"
-        />
+          <label>WhatsApp Number</label>
+          <input
+            type="tel"
+            name="phone"
+            id="phone"
+            required
+            pattern="[0-9]{10}"
+            maxlength="10"
+            placeholder="10 digit WhatsApp number"
+            oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+            class="mb-2 bg-gray-100"
+          />
 
-        <div
-          style="
-            margin-top: 15px;
-            padding: 12px;
-            background: #fff3cd;
-            border: 1px solid #ffe69c;
-            border-radius: 8px;
-            color: #856404;
-            font-size: 14px;
-          "
-        >
-          ⚠ Early Bird Offer Active. Ticket prices will increase after 15th of
-          July. Book now to secure the current ₹300 rate.
-        </div>
+          <label>Reference (Optional)</label>
+          <input type="text" name="reference" placeholder="Friend, Instagram, WhatsApp Group, etc." class="mb-2 bg-gray-100" />
 
-        <div class="price-box bg-[#f0cece]">
-          <p>Total Amount</p>
-          <div class="amount font-light">₹<span id="total">300</span></div>
-        </div>
+          <label>Number of Tickets</label>
+          <input
+            type="number"
+            id="quantity"
+            name="quantity"
+            min="1"
+            max="20"
+            value="1"
+            required
+            oninput="updatePrice()"
+            class="mb-2 bg-gray-100"
+          />
 
-        <input type="hidden" name="amount" id="amount" value="300" />
+          <div style="margin-top:15px; padding:12px; background:#fff3cd; border:1px solid #ffe69c; border-radius:8px; color:#856404; font-size:14px;">
+            ⚠ Early Bird Offer Active. Ticket prices will increase after 15th of July. Book now to secure the current ₹300 rate.
+          </div>
 
-        <button type="submit">Proceed to Payment</button>
-      </form>
-    </div>
-    <img src="./Yuddhakand_Banner.jpeg" alt="banner_image">
-    </div>
-    <div class="xl:hidden container bg-white/50 sm:bg-white/50 backdrop-blur-md">
-      <h1 class="text-3xl font-semibold bebas-neue">Yuddhakand Ticket Booking</h1>
+          <div class="mt-4 p-3 rounded-xl text-center bg-[#f0cece]">
+            <p>Total Amount</p>
+            <div class="text-3xl font-light">₹<span id="total">300</span></div>
+          </div>
 
-      <p class="font-light text-gray-800 text-center ibm-plex-mono">Secure your seat for the show. Seating on first come first serve basis.</p>
+          <input type="hidden" name="amount" id="amount" value="300" />
 
-      <form id="ticketForm">
-        <label>Full Name</label>
-        <input type="text" name="name" required class="mb-2 bg-gray-100" />
+          <button type="submit">Proceed to Payment</button>
+        </form>
+      </div>
 
-        <label>Email Address</label>
-        <input
-          type="email"
-          name="email"
-          required
-          placeholder="example@email.com"
-          class="mb-2 bg-gray-100"
-        />
+      <!-- BANNER IMAGE (right on desktop, hidden on mobile) -->
+      <div class="hidden xl:block">
+        <img src="./Yuddhakand_Banner.jpeg" alt="Yuddhakand Banner" class="w-full h-full object-cover" />
+      </div>
 
-        <label>WhatsApp Number</label>
-        <input
-          type="tel"
-          name="phone"
-          id="phone"
-          required
-          pattern="[0-9]{10}"
-          maxlength="10"
-          placeholder="10 digit WhatsApp number"
-          oninput="this.value = this.value.replace(/[^0-9]/g, '')"
-          class="mb-2 bg-gray-100"
-        />
-
-        <label>Reference (Optional)</label>
-        <input
-          type="text"
-          name="reference"
-          placeholder="Friend, Instagram, WhatsApp Group, etc."
-          class="mb-2 bg-gray-100"
-        />
-
-        <label>Number of Tickets</label>
-        <input
-          type="number"
-          id="quantity"
-          name="quantity"
-          min="1"
-          max="20"
-          value="1"
-          required
-          oninput="updatePrice()"
-          class="mb-2 bg-gray-100"
-        />
-
-        <div
-          style="
-            margin-top: 15px;
-            padding: 12px;
-            background: #fff3cd;
-            border: 1px solid #ffe69c;
-            border-radius: 8px;
-            color: #856404;
-            font-size: 14px;
-          "
-        >
-          ⚠ Early Bird Offer Active. Ticket prices will increase after 15th of
-          July. Book now to secure the current ₹300 rate.
-        </div>
-
-        <div class="price-box bg-[#f0cece]">
-          <p>Total Amount</p>
-          <div class="amount font-light">₹<span id="total">300</span></div>
-        </div>
-
-        <input type="hidden" name="amount" id="amount" value="300" />
-
-        <button type="submit">Proceed to Payment</button>
-      </form>
     </div>
 
     <script>
-  const TICKET_PRICE = 300;
+      const TICKET_PRICE = 300;
+      const sheetURL = 'https://script.google.com/macros/s/AKfycbx76_Ymg_vaFunRU0mL9aapxKaiRtgqitzQpy_hELVXAx3EEoWFCgeI1NVeHNkx9dbqoA/exec';
+      const form = document.getElementById('ticketForm');
 
-  const sheetURL =
-    'https://script.google.com/macros/s/AKfycbx76_Ymg_vaFunRU0mL9aapxKaiRtgqitzQpy_hELVXAx3EEoWFCgeI1NVeHNkx9dbqoA/exec';
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const submitButton = form.querySelector('button');
+        submitButton.disabled = true;
+        submitButton.innerText = 'Creating Payment...';
 
-  const form = document.getElementById('ticketForm');
+        try {
+          await fetch(sheetURL, {
+            method: 'POST',
+            body: new FormData(form)
+          });
 
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
+          const paymentResponse = await fetch('/api/createpayment', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              name: form.name.value,
+              email: form.email.value,
+              phone: form.phone.value,
+              reference: form.reference.value,
+              quantity: Number(form.quantity.value),
+              amount: Number(form.amount.value)
+            })
+          });
 
-    const submitButton = form.querySelector('button');
-    submitButton.disabled = true;
-    submitButton.innerText = 'Creating Payment...';
+          const paymentData = await paymentResponse.json();
+          console.log(paymentData);
 
-    try {
-      // Save booking details to Google Sheets
-      await fetch(sheetURL, {
-        method: 'POST',
-        body: new FormData(form)
+          if (!paymentResponse.ok) {
+            throw new Error(paymentData.error || 'Failed to create payment');
+          }
+
+          window.location.href = paymentData.redirectUrl;
+
+        } catch (error) {
+          console.error(error);
+          alert('Unable to initiate payment. Please try again.');
+        }
+
+        submitButton.disabled = false;
+        submitButton.innerText = 'Proceed to Payment';
       });
 
-      // Create PhonePe order
-      const paymentResponse = await fetch('/api/createpayment', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          name: form.name.value,
-          email: form.email.value,
-          phone: form.phone.value,
-          reference: form.reference.value,
-          quantity: Number(form.quantity.value),
-          amount: Number(form.amount.value)
-        })
-      });
-
-      const paymentData = await paymentResponse.json();
-
-      console.log(paymentData);
-
-      if (!paymentResponse.ok) {
-        throw new Error(
-          paymentData.error || 'Failed to create payment'
-        );
+      function updatePrice() {
+        let qty = parseInt(document.getElementById('quantity').value);
+        if (isNaN(qty) || qty < 1) qty = 1;
+        if (qty > 20) {
+          qty = 20;
+          alert('Maximum 20 tickets can be booked in one transaction.');
+        }
+        document.getElementById('quantity').value = qty;
+        const total = qty * TICKET_PRICE;
+        document.getElementById('total').innerText = total;
+        document.getElementById('amount').value = total;
       }
-
-window.location.href = paymentData.redirectUrl;
-
-    } catch (error) {
-      console.error(error);
-
-      alert(
-        'Unable to initiate payment. Please try again.'
-      );
-    }
-
-    submitButton.disabled = false;
-    submitButton.innerText = 'Proceed to Payment';
-  });
-
-  function updatePrice() {
-    let qty = parseInt(
-      document.getElementById('quantity').value
-    );
-
-    if (isNaN(qty) || qty < 1) {
-      qty = 1;
-    }
-
-    if (qty > 20) {
-      qty = 20;
-      alert(
-        'Maximum 20 tickets can be booked in one transaction.'
-      );
-    }
-
-    document.getElementById('quantity').value = qty;
-
-    const total = qty * TICKET_PRICE;
-
-    document.getElementById('total').innerText = total;
-    document.getElementById('amount').value = total;
-  }
-</script>
+    </script>
   </body>
 </html>
