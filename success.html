@@ -42,114 +42,148 @@
         text-decoration: none;
         border-radius: 8px;
       }
+
+      #errorBox {
+        display: none;
+        background: #fff3f3;
+        border: 1px solid #f00;
+        padding: 10px;
+        border-radius: 8px;
+        margin: 10px 0;
+        font-size: 13px;
+        color: #900;
+        text-align: left;
+        word-break: break-all;
+      }
     </style>
   </head>
 
   <body>
     <div class="card">
-      <div class="icon">✅</div>
-
-      <h1>Payment Successful</h1>
+      <div class="icon">⏳</div>
+      <h1>Verifying Payment...</h1>
 
       <p>Thank you for booking your seat for <strong>Yuddhakand</strong>.</p>
+      <p id="statusMessage"></p>
 
-      <p>Your payment has been received successfully.</p>
       <div id="paymentDetails" style="
-  background:#f8f8f8;
-  padding:15px;
-  border-radius:10px;
-  margin:20px 0;
-  text-align:left;
-">
+        background:#f8f8f8;
+        padding:15px;
+        border-radius:10px;
+        margin:20px 0;
+        text-align:left;
+      ">
+        <p><strong>Transaction ID:</strong> <span id="txnId">Loading...</span></p>
+        <p><strong>Amount Paid:</strong> ₹<span id="amount">Loading...</span></p>
+        <p><strong>Tickets Confirmed:</strong> <span id="tickets">Loading...</span></p>
+        <p><strong>Seat Allocation:</strong> First come, first serve basis.</p>
+      </div>
 
-  <p>
-    <strong>Transaction ID:</strong>
-    <span id="txnId">Loading...</span>
-  </p>
+      <div id="errorBox"></div>
 
-  <p>
-    <strong>Amount Paid:</strong>
-    ₹<span id="amount">Loading...</span>
-  </p>
-
-  <p>
-    <strong>Tickets Confirmed:</strong>
-    <span id="tickets">Loading...</span>
-  </p>
-
-  <p>
-    <strong>Seat Allocation:</strong>
-    First come, first serve basis.
-  </p>
-
-</div>
       <p>
         Our team will share event updates and confirmation details on your
         registered WhatsApp number and email.
       </p>
-      
+
       <p>
-        For support:
-        <br />
-        <strong>team.itihaasa@gmail.com</strong>
-        <br />
+        For support:<br />
+        <strong>team.itihaasa@gmail.com</strong><br />
         <strong>+91 7498421623</strong>
       </p>
-<script>
-const params = new URLSearchParams(window.location.search);
-const orderId = params.get("merchantOrderId"); // ✅ fixed param name
-console.log("Order ID:", orderId);
 
-if (orderId) {
-  fetch(`/api/orderstatus?orderId=${orderId}`)
-    .then(response => response.json())
-    .then(data => {
-      console.log("PhonePe Status Response:", data);
-      if (data.state === "COMPLETED") {
-        document.getElementById("txnId").innerText =
-          data.paymentDetails[0].transactionId;
-        document.getElementById("amount").innerText =
-          data.amount / 100;
-        document.getElementById("tickets").innerText =
-          data.metaInfo.udf4;
-        document.querySelector("h1").innerText =
-          "Payment Successful";
-        document.querySelector(".icon").innerText =
-          "✅";
-      } else {
-        document.querySelector("h1").innerText =
-          "Payment Failed";
-        document.querySelector(".icon").innerText =
-          "❌";
+      
+        id="whatsappButton"
+        href="https://chat.whatsapp.com/LkP2RYeW89I06d25TY05NT?mode=gi_t"
+        target="_blank"
+        class="button"
+        style="background:#25D366;"
+      >
+        Join WhatsApp Channel
+      </a>
+      <a class="button" href="/"> Return to Home </a>
+    </div>
+
+    <script>
+      const params = new URLSearchParams(window.location.search);
+      const orderId = params.get("merchantOrderId");
+      console.log("Order ID from URL:", orderId);
+
+      function showError(msg) {
+        const box = document.getElementById("errorBox");
+        box.style.display = "block";
+        box.innerText = msg;
+      }
+
+      function setFailed() {
+        document.querySelector("h1").innerText = "Payment Failed";
+        document.querySelector(".icon").innerText = "❌";
+        document.querySelector("h1").style.color = "#cc0000";
+        document.getElementById("statusMessage").innerText =
+          "Your payment could not be verified. Please contact support.";
         document.getElementById("txnId").innerText = "-";
         document.getElementById("amount").innerText = "-";
         document.getElementById("tickets").innerText = "0";
       }
-    })
-    .catch(error => {
-      console.error(error);
-      document.querySelector("h1").innerText =
-        "Unable to verify payment";
-      document.querySelector(".icon").innerText = "⚠️";
-      document.getElementById("txnId").innerText = "-";
-      document.getElementById("amount").innerText = "-";
-      document.getElementById("tickets").innerText = "-";
-    });
-} else {
-  document.querySelector("h1").innerText = "Invalid Payment Link";
-  document.querySelector(".icon").innerText = "⚠️";
-}
-</script>
-      <a
-  id="whatsappButton"
-  href="https://chat.whatsapp.com/LkP2RYeW89I06d25TY05NT?mode=gi_t"
-  target="_blank"
-  class="button"
-  style= "background:#25D366;"
-      >
-  Join WhatsApp Channel
-</a>
-      <a class="button" href="/"> Return to Home </a>
-    </div>
+
+      function setSuccess(data) {
+        document.querySelector("h1").innerText = "Payment Successful";
+        document.querySelector(".icon").innerText = "✅";
+        document.querySelector("h1").style.color = "#228b22";
+        document.getElementById("statusMessage").innerText =
+          "Your payment has been received successfully.";
+        document.getElementById("txnId").innerText =
+          data.paymentDetails?.[0]?.transactionId || "-";
+        document.getElementById("amount").innerText =
+          data.amount ? data.amount / 100 : "-";
+        document.getElementById("tickets").innerText =
+          data.metaInfo?.udf4 || "-";
+      }
+
+      if (!orderId) {
+        document.querySelector("h1").innerText = "Invalid Payment Link";
+        document.querySelector(".icon").innerText = "⚠️";
+        document.querySelector("h1").style.color = "#cc0000";
+        document.getElementById("statusMessage").innerText =
+          "No order ID found in URL. Please contact support.";
+        document.getElementById("txnId").innerText = "-";
+        document.getElementById("amount").innerText = "-";
+        document.getElementById("tickets").innerText = "-";
+      } else {
+        fetch(`/api/orderstatus?orderId=${orderId}`)
+          .then(async (response) => {
+            const text = await response.text();
+            console.log("Raw server response:", text);
+
+            if (!response.ok) {
+              showError(`Server error ${response.status}: ${text}`);
+              setFailed();
+              return;
+            }
+
+            const data = JSON.parse(text);
+            console.log("PhonePe Status Response:", data);
+
+            if (data.state === "COMPLETED") {
+              setSuccess(data);
+            } else {
+              setFailed();
+              showError(`Payment state: ${data.state || "unknown"}`);
+            }
+          })
+          .catch((error) => {
+            console.error("Fetch error:", error);
+            document.querySelector("h1").innerText = "Unable to verify payment";
+            document.querySelector(".icon").innerText = "⚠️";
+            document.querySelector("h1").style.color = "#cc0000";
+            document.getElementById("statusMessage").innerText =
+              "Something went wrong while verifying your payment. Please contact support.";
+            document.getElementById("txnId").innerText = "-";
+            document.getElementById("amount").innerText = "-";
+            document.getElementById("tickets").innerText = "-";
+            showError(`Network error: ${error.message}`);
+          });
+      }
+    </script>
   </body>
 </html>
