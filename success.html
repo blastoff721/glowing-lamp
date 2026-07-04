@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Payment Successful | Itihaasa</title>
+    <title>Payment Validation | Itihaasa</title>
 
     <style>
       body {
@@ -63,7 +63,6 @@
       <div class="icon">⏳</div>
       <h1>Verifying Payment...</h1>
 
-      <p>Thank you for booking your seat for <strong>Yuddhakand</strong>.</p>
       <p id="statusMessage"></p>
 
       <div id="paymentDetails" style="
@@ -145,7 +144,7 @@
         document.querySelector(".icon").innerText = "⚠️";
         document.querySelector("h1").style.color = "#cc0000";
         document.getElementById("statusMessage").innerText =
-          "No order ID found in URL. Please contact support.";
+          "No order ID found in URL. Please contact +91 7498421623.";
         document.getElementById("txnId").innerText = "-";
         document.getElementById("amount").innerText = "-";
         document.getElementById("tickets").innerText = "-";
@@ -177,7 +176,7 @@
             document.querySelector(".icon").innerText = "⚠️";
             document.querySelector("h1").style.color = "#cc0000";
             document.getElementById("statusMessage").innerText =
-              "Something went wrong while verifying your payment. Please contact support.";
+              "Something went wrong while verifying your payment. Please contact +91 7498421623.";
             document.getElementById("txnId").innerText = "-";
             document.getElementById("amount").innerText = "-";
             document.getElementById("tickets").innerText = "-";
