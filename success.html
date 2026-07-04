@@ -97,86 +97,47 @@
       </p>
 <script>
 const params = new URLSearchParams(window.location.search);
-
-const orderId = params.get("orderId");
-
+const orderId = params.get("merchantOrderId"); // ✅ fixed param name
 console.log("Order ID:", orderId);
 
 if (orderId) {
-
   fetch(`/api/orderstatus?orderId=${orderId}`)
     .then(response => response.json())
     .then(data => {
-
       console.log("PhonePe Status Response:", data);
-
       if (data.state === "COMPLETED") {
-
-        // Transaction ID from PhonePe
         document.getElementById("txnId").innerText =
           data.paymentDetails[0].transactionId;
-
-        // Amount from PhonePe (paisa -> rupees)
         document.getElementById("amount").innerText =
           data.amount / 100;
-
-        // Number of tickets from PhonePe metadata
         document.getElementById("tickets").innerText =
           data.metaInfo.udf4;
-
-        // Explicit success message from PhonePe status
         document.querySelector("h1").innerText =
           "Payment Successful";
-
         document.querySelector(".icon").innerText =
           "✅";
-
       } else {
-
         document.querySelector("h1").innerText =
           "Payment Failed";
-
         document.querySelector(".icon").innerText =
           "❌";
-
-        document.getElementById("txnId").innerText =
-          "-";
-
-        document.getElementById("amount").innerText =
-          "-";
-
-        document.getElementById("tickets").innerText =
-          "0";
+        document.getElementById("txnId").innerText = "-";
+        document.getElementById("amount").innerText = "-";
+        document.getElementById("tickets").innerText = "0";
       }
-
     })
     .catch(error => {
-
       console.error(error);
-
       document.querySelector("h1").innerText =
         "Unable to verify payment";
-
-      document.querySelector(".icon").innerText =
-        "⚠️";
-
-      document.getElementById("txnId").innerText =
-        "-";
-
-      document.getElementById("amount").innerText =
-        "-";
-
-      document.getElementById("tickets").innerText =
-        "-";
+      document.querySelector(".icon").innerText = "⚠️";
+      document.getElementById("txnId").innerText = "-";
+      document.getElementById("amount").innerText = "-";
+      document.getElementById("tickets").innerText = "-";
     });
-
 } else {
-
-  document.querySelector("h1").innerText =
-    "Invalid Payment Link";
-
-  document.querySelector(".icon").innerText =
-    "⚠️";
+  document.querySelector("h1").innerText = "Invalid Payment Link";
+  document.querySelector(".icon").innerText = "⚠️";
 }
 </script>
       <a
