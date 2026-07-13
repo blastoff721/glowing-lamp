@@ -80,16 +80,17 @@
 
           <label>Number of Tickets</label>
           <input
-            type="number"
+            type="text"
             id="quantity"
             name="quantity"
-            min="1"
-            max="20"
+            inputmode="numeric"
             value="1"
             required
             onfocus="this.select()"
-            onclick="this.select()"
-            oninput="updatePrice()"
+            oninput="
+              this.value = this.value.replace(/\D/g, '');
+              updatePrice();
+            "
             class="mb-2 bg-gray-100"
           />
 
