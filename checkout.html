@@ -3,68 +3,212 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Yuddhakand</title>
+    <title>Yuddhakand Ticket Booking</title>
+    <script src="https://mercury.phonepe.com/web/bundle/checkout.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://cdn.vercel-insights.com/v1/speed-insights.js"></script>
     <style>
       @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
       @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap');
 
       .bebas-neue { font-family: "Bebas Neue", sans-serif; }
       .ibm-plex-mono { font-family: "IBM Plex Mono", monospace; }
+
+      input, select {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        box-sizing: border-box;
+      }
+
+      label {
+        display: block;
+        margin-top: 15px;
+        margin-bottom: 5px;
+        font-weight: bold;
+      }
+
+      button {
+        width: 100%;
+        margin-top: 25px;
+        padding: 15px;
+        border: none;
+        border-radius: 10px;
+        background: #8b0000;
+        color: white;
+        font-size: 18px;
+        cursor: pointer;
+      }
+
+      button:hover { opacity: 0.9; }
     </style>
   </head>
 
   <body class="min-h-screen bg-[url('./Yuddhakand_Banner.jpeg')] bg-no-repeat bg-center bg-cover xl:bg-none xl:bg-white">
 
+    <!-- SINGLE layout: stacked on mobile, side-by-side on xl -->
     <div class="flex flex-col xl:grid xl:grid-cols-2 xl:min-h-screen">
 
-      <!-- LEFT: Event Ended Message -->
-      <div class="p-6 xl:p-10 bg-white/70 xl:bg-white backdrop-blur-md max-w-xl mx-auto xl:max-w-none xl:mx-0 w-full flex flex-col justify-center min-h-screen xl:min-h-0">
+      <!-- FORM (left on desktop, top on mobile) -->
+      <div class="p-6 xl:p-10 bg-white/60 xl:bg-white backdrop-blur-md max-w-xl mx-auto xl:max-w-none xl:mx-0 w-full">
+        <h1 class="text-3xl font-semibold bebas-neue text-center mb-2">Yuddhakand Ticket Booking</h1>
+        <p class="font-light text-gray-600 text-center ibm-plex-mono mb-6">Secure your seat for the show. Seating on first come first serve basis.</p>
 
-        <!-- Title -->
-        <h1 class="text-5xl bebas-neue text-center text-[#8b0000] mb-2 tracking-wide">Yuddhakand</h1>
-        <p class="ibm-plex-mono text-center text-gray-500 text-sm mb-10">A theatrical experience</p>
+        <form id="ticketForm">
+          <label>Full Name</label>
+          <input type="text" name="name" required class="mb-2 bg-gray-100" />
 
-        <!-- Ended Card -->
-        <div class="bg-[#f9f1f1] border border-[#e8c8c8] rounded-2xl p-8 text-center mb-6">
-          <div class="text-4xl mb-4">🎭</div>
-          <h2 class="bebas-neue text-3xl text-[#8b0000] mb-2">Bookings Are Now Closed</h2>
-          <p class="ibm-plex-mono text-gray-600 text-sm leading-relaxed">
-            Thank you for your interest in Yuddhakand.<br/>
-            The event has concluded and ticket bookings are no longer available.
-          </p>
-        </div>
+          <label>Email Address</label>
+          <input type="email" name="email" required placeholder="example@email.com" class="mb-2 bg-gray-100" />
 
-        <!-- WhatsApp CTA -->
-        <div class="bg-[#e9f7ef] border border-[#b7dfca] rounded-2xl p-6 text-center mb-6">
-          <p class="ibm-plex-mono text-gray-700 text-sm mb-4">
-            Stay updated about future shows and events — join our WhatsApp community.
-          </p>
-          <a
-            href="https://chat.whatsapp.com/LkP2RYeW89I06d25TY05NT"
-            target="_blank"
-            class="inline-flex items-center gap-2 bg-[#25D366] text-white font-semibold px-6 py-3 rounded-xl text-sm ibm-plex-mono hover:opacity-90 transition-opacity"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 fill-white" viewBox="0 0 24 24">
-              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-            </svg>
-            Join WhatsApp Group
-          </a>
-        </div>
+          <label>WhatsApp Number</label>
+          <input
+            type="tel"
+            name="phone"
+            id="phone"
+            required
+            pattern="[0-9]{10}"
+            maxlength="10"
+            placeholder="10 digit WhatsApp number"
+            oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+            class="mb-2 bg-gray-100"
+          />
 
-        <!-- Contact -->
-        <p class="ibm-plex-mono text-center text-gray-400 text-xs">
-          Questions? Call or WhatsApp <a href="tel:+917498421623" class="text-[#8b0000] hover:underline">+91 74984 21623</a>
-        </p>
+          <label>Reference (Optional)</label>
+          <input type="text" name="reference" placeholder="Friend, Instagram, WhatsApp Group, etc." class="mb-2 bg-gray-100" />
 
+         <label>Number of Tickets</label>
+
+<div class="flex items-center gap-3 mb-2">
+  <button
+    type="button"
+    onclick="changeQuantity(-1)"
+    class="!w-10 !h-10 !mt-0 !p-0 !rounded-lg !bg-gray-200 !text-xl !font-bold hover:!bg-gray-300 !text-black"
+  >
+    −
+  </button>
+
+  <input
+    type="text"
+    id="quantity"
+    name="quantity"
+    value="1"
+    readonly
+    class="flex-1 text-center bg-gray-100 text-xl font-semibold"
+  />
+
+  <button
+    type="button"
+    onclick="changeQuantity(1)"
+    class="!w-10 !h-10 !mt-0 !p-0 !rounded-lg !bg-gray-200 !text-xl !font-bold hover:!bg-gray-300 !text-black"
+  >
+    +
+  </button>
+</div>
+
+          <div style="margin-top:15px; padding:12px; background:#fff3cd; border:1px solid #ffe69c; border-radius:8px; color:#856404; font-size:14px;">
+            ⚠ Early Bird Offer has ended. Contact +91 7498421623 for group discounts for 10+ people.
+          </div>
+
+          <div class="mt-4 p-3 rounded-xl text-center bg-[#f0cece]">
+            <p>Total Amount</p>
+            <div class="text-3xl font-light">₹<span id="total">399</span></div>
+          </div>
+
+          <input type="hidden" name="amount" id="amount" value="399" />
+
+          <button type="submit">Proceed to Payment</button>
+        </form>
       </div>
 
-      <!-- RIGHT: Banner (desktop only) -->
+      <!-- BANNER IMAGE (right on desktop, hidden on mobile) -->
       <div class="hidden xl:block">
         <img src="./Yuddhakand_Banner.jpeg" alt="Yuddhakand Banner" class="w-full h-full object-cover" />
       </div>
 
     </div>
 
+    <script>
+      const TICKET_PRICE = 399;
+      const sheetURL = 'https://script.google.com/macros/s/AKfycbx76_Ymg_vaFunRU0mL9aapxKaiRtgqitzQpy_hELVXAx3EEoWFCgeI1NVeHNkx9dbqoA/exec';
+      const form = document.getElementById('ticketForm');
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const submitButton = form.querySelector('button');
+        submitButton.disabled = true;
+        submitButton.innerText = 'Creating Payment...';
+
+        try {
+          await fetch(sheetURL, {
+            method: 'POST',
+            body: new FormData(form)
+          });
+
+          const paymentResponse = await fetch('/api/createpayment', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              name: form.name.value,
+              email: form.email.value,
+              phone: form.phone.value,
+              reference: form.reference.value,
+              quantity: Number(form.quantity.value),
+              amount: Number(form.amount.value)
+            })
+          });
+
+          const paymentData = await paymentResponse.json();
+          console.log(paymentData);
+
+          if (!paymentResponse.ok) {
+            throw new Error(paymentData.error || 'Failed to create payment');
+          }
+
+          window.location.href = paymentData.redirectUrl;
+
+        } catch (error) {
+          console.error(error);
+          alert('Unable to initiate payment. Please try again.');
+        }
+
+        submitButton.disabled = false;
+        submitButton.innerText = 'Proceed to Payment';
+      });
+
+      function changeQuantity(change) {
+  const input = document.getElementById('quantity');
+
+  let qty = parseInt(input.value) || 1;
+
+  qty += change;
+
+  if (qty < 1) qty = 1;
+
+  if (qty > 20) {
+    qty = 20;
+    alert('Maximum 20 tickets can be booked in one transaction.');
+  }
+
+  input.value = qty;
+
+  updatePrice();
+}
+      
+      function updatePrice() {
+        const input = document.getElementById('quantity');
+        let qty = parseInt(input.value) || 1;
+        if (isNaN(qty) || qty < 1) qty = 1;
+        if (qty > 20) {
+          qty = 20;
+          alert('Maximum 20 tickets can be booked in one transaction.');
+        }
+        input.value = qty;
+        const total = qty * TICKET_PRICE;
+        document.getElementById('total').innerText = total;
+        document.getElementById('amount').value = total;
+      }
+    </script>
   </body>
 </html>
