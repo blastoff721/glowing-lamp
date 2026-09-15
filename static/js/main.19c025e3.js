@@ -11217,7 +11217,7 @@
                   "bg-white rounded-3xl h-14 mb-10 w-1/2 text-[#3D3D3D] font-['Montserrat'] text-lg font-bold py-6 flex items-center justify-center sm:w-1/4 xl:w-1/5 xl:text-2xl xl:py-6",
                 children: (0, He.jsx)("a", {
                   href: "/checkout.html",
-                  children: "Book Yuddhakand Tickets Now!",
+                  children: "Book Aranyakand Tickets Now!",
                 }),
               }),
               (0, He.jsxs)("div", {
