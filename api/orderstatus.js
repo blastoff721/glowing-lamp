@@ -1,85 +1,22 @@
-import axios from "axios";
+// GET /api/orderstatus?orderId=VIRASAT_...
+// Used by the success page. Asks PhonePe whether the order is paid; if it is,
+// the order is copied to the "Orders" tab of the Google Sheet.
+// Only returns what the success page needs (no name, phone or address).
+
+import { ORDER_ID_PATTERN, checkAndRecord } from "./_lib.js";
 
 export default async function handler(req, res) {
+  const orderId = String(req.query.orderId || "");
+  if (!ORDER_ID_PATTERN.test(orderId)) {
+    return res.status(400).json({ error: "Invalid order ID" });
+  }
+
   try {
-    // Read orderId from URL
-    const { orderId } = req.query;
-
-    if (!orderId) {
-      return res.status(400).json({
-        error: "orderId is required"
-      });
-    }
-
-    // STEP 1: Generate OAuth token
-    const params = new URLSearchParams();
-
-    params.append(
-      "client_id",
-      process.env.PHONEPE_CLIENT_ID
-    );
-
-    params.append(
-      "client_version",
-      process.env.PHONEPE_CLIENT_VERSION
-    );
-
-    params.append(
-      "client_secret",
-      process.env.PHONEPE_CLIENT_SECRET
-    );
-
-    params.append(
-      "grant_type",
-      "client_credentials"
-    );
-
-    const authResponse = await axios.post(
-      "https://api.phonepe.com/apis/identity-manager/v1/oauth/token",
-      params,
-      {
-        headers: {
-          "Content-Type":
-            "application/x-www-form-urlencoded"
-        }
-      }
-    );
-
-    const accessToken =
-      authResponse.data.access_token;
-
-    // STEP 2: Ask PhonePe for order status
-    const statusResponse = await axios.get(
-      `https://api.phonepe.com/apis/pg/checkout/v2/order/${orderId}/status`,
-      {
-        headers: {
-          Authorization:
-            `O-Bearer ${accessToken}`,
-
-          "Content-Type":
-            "application/json",
-
-          "X-MERCHANT-ID":
-            process.env.PHONEPE_MERCHANT_ID
-        }
-      }
-    );
-
-    // Return response to frontend
-    res.status(200).json(
-      statusResponse.data
-    );
-
-  } catch (error) {
-    console.error(
-      error.response?.data ||
-      error.message
-    );
-
-    res.status(500).json({
-      error:
-        error.response?.data ||
-        error.message
-    });
+    const summary = await checkAndRecord(orderId);
+    res.setHeader("Cache-Control", "no-store");
+    return res.status(200).json({ orderId, ...summary });
+  } catch (err) {
+    console.error("Order status failed", orderId, err.message, err.details || "");
+    return res.status(502).json({ error: "Could not check the payment right now" });
   }
 }
