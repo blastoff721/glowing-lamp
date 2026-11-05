@@ -1,190 +1,63 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="https://cdn.vercel-insights.com/v1/speed-insights.js"></script>
-    <title>Payment Validation | Itihaasa</title>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Payment confirmation | Itihaasa</title>
+  <meta name="robots" content="noindex" />
+  <meta name="theme-color" content="#110d0b" />
+  <link rel="icon" href="/favicon.ico" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@500;600&family=Montserrat:wght@400;500;600;700&family=Mukta:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/assets/css/site.css" />
+  <script defer src="/assets/js/site.js"></script>
+  <script defer src="/assets/js/success.js"></script>
+</head>
+<body>
 
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        background: #f5f5f5;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh;
-        margin: 0;
-      }
+  <header class="site-header">
+    <div class="wrap">
+      <a class="logo" href="/" aria-label="Itihaasa home"><img src="/assets/img/itihaasa-logo.png" alt="Itihaasa" width="273" height="70" /></a>
+    </div>
+  </header>
 
-      .card {
-        background: white;
-        padding: 40px;
-        border-radius: 15px;
-        text-align: center;
-        max-width: 600px;
-        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-      }
+  <main class="wrap">
+    <section class="status-card" id="status" data-state="loading" aria-live="polite">
+      <div class="status-icon" aria-hidden="true"></div>
+      <h1 id="statusTitle">Verifying payment...</h1>
+      <p class="lead" id="statusText" style="margin-inline: auto">Please wait a moment and do not close this page.</p>
 
-      .icon {
-        font-size: 70px;
-      }
-
-      h1 {
-        color: #228b22;
-      }
-
-      .button {
-        display: inline-block;
-        margin-top: 20px;
-        padding: 12px 24px;
-        background: #8b0000;
-        color: white;
-        text-decoration: none;
-        border-radius: 8px;
-      }
-
-      #errorBox {
-        display: none;
-        background: #fff3f3;
-        border: 1px solid #f00;
-        padding: 10px;
-        border-radius: 8px;
-        margin: 10px 0;
-        font-size: 13px;
-        color: #900;
-        text-align: left;
-        word-break: break-all;
-      }
-    </style>
-  </head>
-
-  <body>
-    <div class="card">
-      <div class="icon">⏳</div>
-      <h1>Verifying Payment...</h1>
-
-      <p id="statusMessage"></p>
-
-      <div id="paymentDetails" style="
-        background:#f8f8f8;
-        padding:15px;
-        border-radius:10px;
-        margin:20px 0;
-        text-align:left;
-      ">
-        <p><strong>Transaction ID:</strong> <span id="txnId">Loading...</span></p>
-        <p><strong>Amount Paid:</strong> ₹<span id="amount">Loading...</span></p>
-        <p><strong>Tickets Confirmed:</strong> <span id="tickets">Loading...</span></p>
-        <p><strong>Seat Allocation:</strong> First come, first serve basis.</p>
+      <!-- Shown only when the payment is confirmed -->
+      <div id="paidBlock" hidden>
+        <dl class="card details">
+          <div><dt>Transaction ID</dt><dd id="txnId">-</dd></div>
+          <div><dt>Order ID</dt><dd id="orderId">-</dd></div>
+          <div><dt>Item</dt><dd>Virasat Diwali Anka 2026</dd></div>
+          <div><dt>Copies</dt><dd id="copies">-</dd></div>
+          <div><dt>Amount paid</dt><dd>Rs <span id="amount">-</span></dd></div>
+        </dl>
+        <div class="ship-note">
+          <div>
+            <strong>Your magazine will be shipped via India Post Speed Post.</strong><br />
+            You will get a confirmation on your WhatsApp number once it is posted. Please take a screenshot of this page for your records.
+          </div>
+        </div>
       </div>
 
-      <div id="errorBox"></div>
+      <div class="actions">
+        <a class="btn btn-primary" id="retryBtn" href="/virasat" hidden>Try again</a>
+        <button class="btn btn-primary" id="refreshBtn" type="button" hidden>Check again</button>
+        <a class="btn btn-ghost" href="/">Back to home</a>
+      </div>
 
-      <p>
-        Our team will share event updates and confirmation details on your
-        registered WhatsApp number and email.
+      <p style="margin-top: 36px; color: var(--muted); font-size: 15px">
+        Need help? <a href="https://wa.me/919765200109" target="_blank" rel="noopener">WhatsApp +91 97652 00109</a>
+        or <a href="mailto:team.itihaasa@gmail.com">team.itihaasa@gmail.com</a>
+        <span id="helpRef"></span>
       </p>
+    </section>
+  </main>
 
-      <p>
-        For support:<br />
-        <strong>team.itihaasa@gmail.com</strong><br />
-        <strong>+91 7498421623</strong>
-      </p>
-
-      <a
-  id="whatsappButton"
-  href="https://chat.whatsapp.com/LkP2RYeW89I06d25TY05NT?mode=gi_t"
-  target="_blank"
-  class="button"
-  style= "background:#25D366;"
-      >
-  Join WhatsApp Channel
-</a>
-      <a class="button" href="/"> Return to Home </a>
-
-    </div>
-
-    <script>
-      const params = new URLSearchParams(window.location.search);
-      const orderId = params.get("merchantOrderId");
-      console.log("Order ID from URL:", orderId);
-
-      function showError(msg) {
-        const box = document.getElementById("errorBox");
-        box.style.display = "block";
-        box.innerText = msg;
-      }
-
-      function setFailed() {
-        document.querySelector("h1").innerText = "Payment Failed";
-        document.querySelector(".icon").innerText = "❌";
-        document.querySelector("h1").style.color = "#cc0000";
-        document.getElementById("statusMessage").innerText =
-          "Your payment could not be verified. Please contact support.";
-        document.getElementById("txnId").innerText = "-";
-        document.getElementById("amount").innerText = "-";
-        document.getElementById("tickets").innerText = "0";
-      }
-
-      function setSuccess(data) {
-        document.querySelector("h1").innerText = "Payment Successful";
-        document.querySelector(".icon").innerText = "✅";
-        document.querySelector("h1").style.color = "#228b22";
-        document.getElementById("statusMessage").innerText =
-          "Your payment has been received successfully.";
-        document.getElementById("txnId").innerText =
-          data.paymentDetails?.[0]?.transactionId || "-";
-        document.getElementById("amount").innerText =
-          data.amount ? data.amount / 100 : "-";
-        document.getElementById("tickets").innerText =
-          data.metaInfo?.udf4 || "-";
-      }
-
-      if (!orderId) {
-        document.querySelector("h1").innerText = "Invalid Payment Link";
-        document.querySelector(".icon").innerText = "⚠️";
-        document.querySelector("h1").style.color = "#cc0000";
-        document.getElementById("statusMessage").innerText =
-          "No order ID found in URL. Please contact +91 7498421623.";
-        document.getElementById("txnId").innerText = "-";
-        document.getElementById("amount").innerText = "-";
-        document.getElementById("tickets").innerText = "-";
-      } else {
-        fetch(`/api/orderstatus?orderId=${orderId}`)
-          .then(async (response) => {
-            const text = await response.text();
-            console.log("Raw server response:", text);
-
-            if (!response.ok) {
-              showError(`Server error ${response.status}: ${text}`);
-              setFailed();
-              return;
-            }
-
-            const data = JSON.parse(text);
-            console.log("PhonePe Status Response:", data);
-
-            if (data.state === "COMPLETED") {
-              setSuccess(data);
-            } else {
-              setFailed();
-              showError(`Payment state: ${data.state || "unknown"}`);
-            }
-          })
-          .catch((error) => {
-            console.error("Fetch error:", error);
-            document.querySelector("h1").innerText = "Unable to verify payment";
-            document.querySelector(".icon").innerText = "⚠️";
-            document.querySelector("h1").style.color = "#cc0000";
-            document.getElementById("statusMessage").innerText =
-              "Something went wrong while verifying your payment. Please contact +91 7498421623.";
-            document.getElementById("txnId").innerText = "-";
-            document.getElementById("amount").innerText = "-";
-            document.getElementById("tickets").innerText = "-";
-            showError(`Network error: ${error.message}`);
-          });
-      }
-    </script>
-  </body>
+</body>
 </html>
