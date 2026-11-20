@@ -54,6 +54,7 @@
 
   form.addEventListener("submit", async function (e) {
     e.preventDefault();
+    if (payBtn.disabled) return; // out of stock
     errorBox.classList.remove("show");
 
     // Check every field in the browser first (the server checks again)

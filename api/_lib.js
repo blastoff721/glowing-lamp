@@ -15,6 +15,7 @@ export const PRODUCTS = {
     price: 349, // rupees per copy, Speed Post shipping included
     prefix: "VIRASAT", // order IDs look like VIRASAT_1730000000000_ab12cd
     maxQty: 10,
+    inStock: false, // set to true to start selling again
   },
 };
 

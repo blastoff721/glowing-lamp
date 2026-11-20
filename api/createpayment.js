@@ -64,6 +64,7 @@ export default async function handler(req, res) {
   }
 
   const { order, product, errors } = validate(req.body || {});
+  if (product && !product.inStock) return res.status(410).json({ error: "Sorry, this item is out of stock." });
   if (errors.length) return res.status(400).json({ error: errors.join(". ") });
 
   const amount = product.price * order.quantity; // rupees, decided here only

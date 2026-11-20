@@ -69,6 +69,7 @@ p { margin: 0 0 1em; }
 .btn-ghost:hover { border-color: var(--text); }
 .btn-lg { padding: 20px 34px; font-size: 18px; }
 .btn[disabled] { opacity: 0.6; cursor: wait; transform: none; }
+.btn.is-disabled, .btn.is-disabled:hover { background: #4a3f39; color: #d8ccbd; box-shadow: none; cursor: not-allowed; transform: none; opacity: 1; }
 
 /* ---------- Header ---------- */
 .site-header {
